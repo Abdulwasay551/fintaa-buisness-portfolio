@@ -1,0 +1,105 @@
+{% extends "portfolio/base.html" %}
+{% load wagtailcore_tags %}
+{% load portfolio_tags %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="pt-32 pb-20">
+    <div class="container mx-auto px-6">
+        <div class="max-w-4xl mx-auto">
+            <div class="slide-in text-center mb-12">
+                <h1 class="text-4xl md:text-6xl font-bold mb-6 text-glow">
+                    {{ page.title }}
+                </h1>
+                <div class="flex flex-wrap justify-center items-center gap-4 text-gray-300 mb-8">
+                    <span class="flex items-center">
+                        <i class="fas fa-calendar mr-2 text-green-400"></i>
+                        {{ page.publish_date|date:"M d, Y" }}
+                    </span>
+                    <span class="flex items-center">
+                        <i class="fas fa-user mr-2 text-green-400"></i>
+                        {{ page.author }}
+                    </span>
+                    {% if page.tags %}
+                    <div class="flex flex-wrap gap-2">
+                        {% for tag in page.tags|split:"," %}
+                        <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">
+                            {{ tag|trim }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% if page.excerpt %}
+                <p class="text-xl text-gray-300 leading-relaxed">{{ page.excerpt }}</p>
+                {% endif %}
+            </div>
+            
+            {% if page.featured_image %}
+            <div class="mb-12 rounded-lg overflow-hidden">
+                <img src="{{ page.featured_image.url }}" alt="{{ page.title }}" class="w-full h-64 md:h-96 object-cover">
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Blog Content -->
+<section class="py-20">
+    <div class="container mx-auto px-6">
+        <div class="max-w-4xl mx-auto">
+            <div class="prose prose-lg prose-invert max-w-none">
+                {% for block in page.content %}
+                    {% if block.block_type == 'heading' %}
+                        <h2 class="text-3xl md:text-4xl font-bold mb-6 text-glow">{{ block.value }}</h2>
+                    {% elif block.block_type == 'paragraph' %}
+                        <div class="text-gray-300 mb-6 leading-relaxed">{{ block.value|richtext }}</div>
+                    {% elif block.block_type == 'image' %}
+                        <div class="my-8 rounded-lg overflow-hidden">
+                            <img src="{{ block.value.url }}" alt="{{ block.value.title }}" class="w-full h-auto">
+                        </div>
+                    {% elif block.block_type == 'code' %}
+                        <div class="my-8 bg-black/50 border border-green-500/30 rounded-lg p-6 overflow-x-auto">
+                            <pre class="text-green-400"><code>{{ block.value }}</code></pre>
+                        </div>
+                    {% elif block.block_type == 'quote' %}
+                        <blockquote class="my-8 border-l-4 border-green-500 pl-6 italic text-xl text-gray-300">
+                            {{ block.value }}
+                        </blockquote>
+                    {% elif block.block_type == 'list' %}
+                        <ul class="my-6 space-y-2">
+                            {% for item in block.value %}
+                            <li class="flex items-start">
+                                <i class="fas fa-check text-green-400 mt-1 mr-3"></i>
+                                <span class="text-gray-300">{{ item }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Navigation -->
+<section class="py-20 bg-gradient-to-r from-green-900/20 to-emerald-900/20">
+    <div class="container mx-auto px-6">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <a href="/blog/" class="bg-gradient-to-r from-green-500 to-green-600 px-8 py-4 rounded-lg font-semibold hover:from-green-600 hover:to-green-700 transition-all green-glow inline-block mb-4 md:mb-0">
+                    ← Back to Blog
+                </a>
+                <div class="flex space-x-4">
+                    <a href="/contact/" class="border border-green-500 px-6 py-3 rounded-lg font-semibold hover:bg-green-500/20 transition-all">
+                        Get in Touch
+                    </a>
+                    <a href="/services/" class="border border-green-500 px-6 py-3 rounded-lg font-semibold hover:bg-green-500/20 transition-all">
+                        Our Services
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

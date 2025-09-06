@@ -1,0 +1,71 @@
+{% extends "portfolio/base.html" %}
+{% load wagtailcore_tags %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="pt-32 pb-20">
+    <div class="container mx-auto px-6 text-center">
+        <div class="slide-in">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 text-glow">
+                {{ page.hero_title }}
+            </h1>
+            <div class="text-xl md:text-2xl mb-12 text-gray-300 max-w-4xl mx-auto">
+                {{ page.hero_description|richtext }}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Grid -->
+<section class="py-20">
+    <div class="container mx-auto px-6">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for service in services %}
+            <div class="service-card p-8 rounded-lg hover:transform hover:scale-105 transition-all duration-300">
+                <div class="text-4xl mb-6 text-green-400">
+                    <i class="{{ service.icon }}"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-glow">{{ service.title }}</h3>
+                <div class="text-gray-300 mb-6">
+                    {{ service.description|richtext }}
+                </div>
+                {% if service.features %}
+                <div class="border-t border-green-500/20 pt-4">
+                    <h4 class="text-lg font-semibold mb-3 text-green-400">Key Features:</h4>
+                    <div class="text-gray-300 text-sm">
+                        {{ service.features|richtext }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% empty %}
+            <div class="col-span-full text-center py-20">
+                <div class="text-6xl mb-6 text-green-400">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4">Services Coming Soon</h3>
+                <p class="text-gray-300">We're working on adding detailed service information.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-20 bg-gradient-to-r from-green-900/20 to-emerald-900/20">
+    <div class="container mx-auto px-6 text-center">
+        <h2 class="text-4xl md:text-5xl font-bold mb-6 text-glow">Ready to Start Your Project?</h2>
+        <p class="text-xl mb-8 text-gray-300 max-w-3xl mx-auto">
+            Let's discuss how we can help bring your ideas to life with our comprehensive software development services.
+        </p>
+        <div class="space-x-4">
+            <a href="/contact/" class="bg-gradient-to-r from-green-500 to-green-600 px-8 py-4 rounded-lg font-semibold hover:from-green-600 hover:to-green-700 transition-all green-glow inline-block">
+                Get Quote
+            </a>
+            <a href="/portfolio/" class="border border-green-500 px-8 py-4 rounded-lg font-semibold hover:bg-green-500/20 transition-all inline-block">
+                View Portfolio
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

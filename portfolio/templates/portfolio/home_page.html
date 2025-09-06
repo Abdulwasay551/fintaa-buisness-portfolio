@@ -1,0 +1,293 @@
+{% extends "portfolio/base.html" %}
+{% load wagtailcore_tags %}
+
+{% block content %}
+<!-- Hero Section -->
+<section id="home" class="min-h-screen flex items-center justify-center pt-20">
+        <canvas class="matrix-bg" id="matrix"></canvas>
+
+    <div class="container mx-auto px-6 text-center">
+        <div class="slide-in">
+            <h1 class="text-6xl md:text-8xl font-bold mb-6 text-glow">
+                {{ page.hero_title }}
+                <span class="block text-green-400 text-4xl md:text-6xl">{{ page.hero_subtitle }}</span>
+            </h1>
+            <div class="text-xl md:text-2xl mb-8 h-20">
+                <span class="typing-animation typing-cursor overflow-hidden whitespace-nowrap" data-text="{{ page.hero_typing_text }}"></span>
+            </div>
+            <div class="text-lg md:text-xl mb-12 text-gray-300 max-w-3xl mx-auto">
+                {{ page.hero_description|richtext }}
+            </div>
+            <div class="space-x-4">
+                <button class="bg-gradient-to-r from-green-500 to-green-600 px-8 py-4 rounded-lg font-semibold hover:from-green-600 hover:to-green-700 transition-all green-glow" onclick="scrollToContact()">
+                    {{ page.hero_primary_button_text }}
+                </button>
+                <button class="border-2 border-green-500 px-8 py-4 rounded-lg font-semibold hover:bg-green-500/10 transition-all" onclick="scrollToProjects()">
+                    {{ page.hero_secondary_button_text }}
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section id="services" class="py-20">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-16 fade-in">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6 text-glow">Our Services</h2>
+            <p class="text-xl text-gray-300 max-w-2xl mx-auto">
+                Comprehensive technology solutions tailored to your business needs
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for service in page.services.all %}
+            <div class="service-card p-8 rounded-xl">
+                <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-green-400 rounded-lg flex items-center justify-center mb-6">
+                    {% if service.icon_svg %}
+                        {{ service.icon_svg|safe }}
+                    {% else %}
+                        <svg class="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                        </svg>
+                    {% endif %}
+                </div>
+                <h3 class="text-2xl font-semibold mb-4">{{ service.title }}</h3>
+                <p class="text-gray-300 mb-4">{{ service.description }}</p>
+                <ul class="text-green-400 text-sm space-y-1">
+                    {% if service.feature_1 %}<li>• {{ service.feature_1 }}</li>{% endif %}
+                    {% if service.feature_2 %}<li>• {{ service.feature_2 }}</li>{% endif %}
+                    {% if service.feature_3 %}<li>• {{ service.feature_3 }}</li>{% endif %}
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="py-20 bg-black/50">
+    <div class="container mx-auto px-6">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <div class="fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6 text-glow">{{ page.about_title }}</h2>
+                <div class="text-xl text-gray-300 mb-6">
+                    {{ page.about_description|richtext }}
+                </div>
+                {% if page.about_additional_text %}
+                <div class="text-lg text-gray-400 mb-8">
+                    {{ page.about_additional_text|richtext }}
+                </div>
+                {% endif %}
+                <div class="space-y-4">
+                    {% for feature in page.about_features.all %}
+                    <div class="flex items-center space-x-3">
+                        <div class="w-2 h-2 bg-green-400 rounded-full pulse-green"></div>
+                        <span>{{ feature.feature_text }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="floating">
+                <div class="relative">
+                    <div class="w-96 h-96 bg-gradient-to-r from-green-500/20 to-green-600/20 rounded-full blur-3xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+                    <div class="relative bg-gray-900/50 backdrop-blur-sm border border-green-500/30 rounded-2xl p-8">
+                        <div class="space-y-6">
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-400">Technologies</span>
+                                <span class="text-green-400">{{ page.technologies_count }}</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-400">Projects Completed</span>
+                                <span class="text-green-400">{{ page.projects_count }}</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-400">Happy Clients</span>
+                                <span class="text-green-400">{{ page.client_satisfaction }}</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-400">Years Experience</span>
+                                <span class="text-green-400">{{ page.years_experience }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="py-20">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-16 fade-in">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6 text-glow">Get In Touch</h2>
+            <p class="text-xl text-gray-300 max-w-2xl mx-auto">
+                Ready to transform your ideas into reality? Let's discuss your next project.
+            </p>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-12">
+            <div class="space-y-8">
+                <div class="border-gradient">
+                    <div class="bg-black rounded-lg p-8">
+                        <h3 class="text-2xl font-semibold mb-6">Contact Information</h3>
+                        <div class="space-y-6">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-green-400 font-semibold">Location</p>
+                                    <p class="text-gray-300">{{ page.contact_location }}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-green-400 font-semibold">Email</p>
+                                    <p class="text-gray-300">{{ page.contact_email }}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-green-400 font-semibold">Business Hours</p>
+                                    <p class="text-gray-300">{{ page.business_hours }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-gradient">
+                <div class="bg-black rounded-lg p-8">
+                    <h3 class="text-2xl font-semibold mb-6">Send Message</h3>
+                    <form class="space-y-6" method="post" action="/contact/">
+                        {% csrf_token %}
+                        <div>
+                            <input type="text" name="name" placeholder="Your Name" required class="w-full bg-green-900/10 border border-gray-700 rounded-lg px-4 py-3 focus:border-green-400 focus:outline-none transition-colors">
+                        </div>
+                        <div>
+                            <input type="email" name="email" placeholder="Your Email" required class="w-full bg-green-900/10 border border-gray-700 rounded-lg px-4 py-3 focus:border-green-400 focus:outline-none transition-colors">
+                        </div>
+                        <div>
+                            <select name="service" required class="w-full bg-green-900/10 border border-gray-700 rounded-lg px-4 py-3 focus:border-green-400 focus:outline-none transition-colors">
+                                <option value="">Select Service</option>
+                                <option value="web_development">Web Development</option>
+                                <option value="mobile_app_development">Mobile App Development</option>
+                                <option value="ai_automation">AI & Automation</option>
+                                <option value="cybersecurity">Cybersecurity</option>
+                                <option value="digital_marketing">Digital Marketing</option>
+                                <option value="call_center_services">Call Center Services</option>
+                            </select>
+                        </div>
+                        <div>
+                            <textarea name="message" placeholder="Your Message" rows="4" required class="w-full bg-green-900/10 border border-gray-700 rounded-lg px-4 py-3 focus:border-green-400 focus:outline-none transition-colors resize-none"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-green-500 to-green-600 py-3 rounded-lg font-semibold hover:from-green-600 hover:to-green-700 transition-all green-glow">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Initialize animations with Anime.js
+    document.addEventListener('DOMContentLoaded', function() {
+        // Hero section animation
+        anime.timeline({
+            easing: 'easeOutExpo',
+            duration: 1000
+        })
+        .add({
+            targets: '.slide-in h1',
+            translateY: [50, 0],
+            opacity: [0, 1],
+            delay: 300
+        })
+        .add({
+            targets: '.slide-in .typing-animation',
+            opacity: [0, 1],
+            delay: 500
+        }, '-=500')
+        .add({
+            targets: '.slide-in > div:nth-child(3)',
+            translateY: [30, 0],
+            opacity: [0, 1],
+            delay: 200
+        }, '-=300')
+        .add({
+            targets: '.slide-in button',
+            translateY: [20, 0],
+            opacity: [0, 1],
+            delay: anime.stagger(100)
+        }, '-=200');
+
+        // Typing animation
+        const typingElement = document.querySelector('.typing-animation');
+        if (typingElement) {
+            const text = typingElement.getAttribute('data-text');
+            typeWriter(typingElement, text, 100);
+        }
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Service cards animation
+        document.querySelectorAll('.service-card').forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(50px)';
+            card.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+            observer.observe(card);
+        });
+    });
+
+    // Helper functions
+    function scrollToContact() {
+        document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function scrollToProjects() {
+        // Navigate to portfolio page
+        window.location.href = '/portfolio/';
+    }
+</script>
+{% endblock %}

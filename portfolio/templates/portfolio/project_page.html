@@ -1,0 +1,165 @@
+{% extends "portfolio/base.html" %}
+{% load wagtailcore_tags %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="pt-32 pb-20">
+    <div class="container mx-auto px-6">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+                <h1 class="text-5xl md:text-6xl font-bold mb-6 text-glow">{{ page.project_title }}</h1>
+                {% if page.project_subtitle %}
+                <h2 class="text-2xl text-green-400 mb-6">{{ page.project_subtitle }}</h2>
+                {% endif %}
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-center space-x-3">
+                        <span class="text-green-400 font-semibold">Client:</span>
+                        <span>{{ page.client_name }}</span>
+                    </div>
+                    {% if page.project_duration %}
+                    <div class="flex items-center space-x-3">
+                        <span class="text-green-400 font-semibold">Duration:</span>
+                        <span>{{ page.project_duration }}</span>
+                    </div>
+                    {% endif %}
+                    {% if page.project_team_size %}
+                    <div class="flex items-center space-x-3">
+                        <span class="text-green-400 font-semibold">Team Size:</span>
+                        <span>{{ page.project_team_size }}</span>
+                    </div>
+                    {% endif %}
+                    {% if page.completion_date %}
+                    <div class="flex items-center space-x-3">
+                        <span class="text-green-400 font-semibold">Completed:</span>
+                        <span>{{ page.completion_date|date:"F Y" }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="space-x-4">
+                    {% if page.project_url %}
+                    <a href="{{ page.project_url }}" target="_blank" class="bg-gradient-to-r from-green-500 to-green-600 px-6 py-3 rounded-lg font-semibold hover:from-green-600 hover:to-green-700 transition-all green-glow inline-block">
+                        View Live Project
+                    </a>
+                    {% endif %}
+                    {% if page.github_url %}
+                    <a href="{{ page.github_url }}" target="_blank" class="border-2 border-green-500 px-6 py-3 rounded-lg font-semibold hover:bg-green-500/10 transition-all inline-block">
+                        View Code
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div>
+                {% if page.featured_image_url %}
+                <img src="{{ page.featured_image_url }}" alt="{{ page.project_title }}" class="w-full rounded-lg shadow-2xl">
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Project Overview -->
+<section class="py-20 bg-black/50">
+    <div class="container mx-auto px-6">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold mb-8 text-glow">Project Overview</h2>
+            <div class="prose prose-lg prose-invert max-w-none">
+                {{ page.project_overview|richtext }}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Technologies Used -->
+{% if page.project_technologies.all %}
+<section class="py-20">
+    <div class="container mx-auto px-6">
+        <h2 class="text-4xl font-bold mb-12 text-center text-glow">Technologies Used</h2>
+        <div class="max-w-4xl mx-auto">
+            {% regroup page.project_technologies.all by category as tech_groups %}
+            {% for group in tech_groups %}
+            <div class="mb-8">
+                <h3 class="text-2xl font-semibold mb-4 text-green-400 capitalize">{{ group.grouper }}</h3>
+                <div class="grid md:grid-cols-4 gap-4">
+                    {% for tech in group.list %}
+                    <div class="bg-gray-900/50 border border-green-500/30 rounded-lg p-4 text-center">
+                        <span class="text-white">{{ tech.name }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Project Details -->
+<section class="py-20 bg-black/30">
+    <div class="container mx-auto px-6">
+        <div class="max-w-4xl mx-auto">
+            <div class="grid md:grid-cols-3 gap-12">
+                {% if page.project_challenge %}
+                <div>
+                    <h3 class="text-2xl font-semibold mb-6 text-green-400">Challenge</h3>
+                    <div class="prose prose-invert">
+                        {{ page.project_challenge|richtext }}
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if page.project_solution %}
+                <div>
+                    <h3 class="text-2xl font-semibold mb-6 text-green-400">Solution</h3>
+                    <div class="prose prose-invert">
+                        {{ page.project_solution|richtext }}
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if page.project_results %}
+                <div>
+                    <h3 class="text-2xl font-semibold mb-6 text-green-400">Results</h3>
+                    <div class="prose prose-invert">
+                        {{ page.project_results|richtext }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Project Images -->
+{% if page.project_images.all %}
+<section class="py-20">
+    <div class="container mx-auto px-6">
+        <h2 class="text-4xl font-bold mb-12 text-center text-glow">Project Gallery</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for image in page.project_images.all %}
+            <div class="relative group">
+                <img src="{{ image.image_url }}" alt="{{ image.caption }}" class="w-full h-64 object-cover rounded-lg transition-transform group-hover:scale-105">
+                {% if image.caption %}
+                <div class="absolute bottom-0 left-0 right-0 bg-black/80 text-white p-4 rounded-b-lg">
+                    <p class="text-sm">{{ image.caption }}</p>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA Section -->
+<section class="py-20 bg-black/50">
+    <div class="container mx-auto px-6 text-center">
+        <h2 class="text-4xl font-bold mb-6 text-glow">Like What You See?</h2>
+        <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            Ready to start your own project? Let's discuss how we can bring your vision to life.
+        </p>
+        <button class="bg-gradient-to-r from-green-500 to-green-600 px-8 py-4 rounded-lg font-semibold hover:from-green-600 hover:to-green-700 transition-all green-glow" onclick="window.location.href='/#contact'">
+            Start Your Project
+        </button>
+    </div>
+</section>
+{% endblock %}

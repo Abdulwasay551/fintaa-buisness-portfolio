@@ -1,0 +1,111 @@
+{% extends "portfolio/base.html" %}
+{% load wagtailcore_tags %}
+{% load portfolio_tags %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="pt-32 pb-20">
+    <div class="container mx-auto px-6 text-center">
+        <div class="slide-in">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 text-glow">
+                {{ page.hero_title }}
+            </h1>
+            <div class="text-xl md:text-2xl mb-12 text-gray-300 max-w-4xl mx-auto">
+                {{ page.hero_description|richtext }}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Team Members Grid -->
+<section class="py-20">
+    <div class="container mx-auto px-6">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for member in team_members %}
+            <div class="service-card p-8 rounded-lg text-center hover:transform hover:scale-105 transition-all duration-300">
+                <!-- Avatar placeholder -->
+                <div class="w-32 h-32 mx-auto mb-6 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center">
+                    <span class="text-4xl font-bold text-black">{{ member.name|first }}</span>
+                </div>
+                
+                <h3 class="text-2xl font-bold mb-2 text-glow">{{ member.name }}</h3>
+                <p class="text-green-400 font-semibold mb-4">{{ member.position }}</p>
+                
+                <div class="text-gray-300 mb-6 text-left">
+                    {{ member.bio|richtext }}
+                </div>
+                
+                <!-- Skills -->
+                {% if member.skills %}
+                <div class="mb-6">
+                    <h4 class="text-lg font-semibold mb-3 text-green-400">Skills:</h4>
+                    <div class="flex flex-wrap gap-2">
+                        {% for skill in member.skills|split:"," %}
+                        <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">
+                            {{ skill|trim }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Social Links -->
+                <div class="flex justify-center space-x-4">
+                    {% if member.email %}
+                    <a href="mailto:{{ member.email }}" class="text-green-400 hover:text-green-300 transition-colors">
+                        <i class="fas fa-envelope text-xl"></i>
+                    </a>
+                    {% endif %}
+                    {% if member.linkedin %}
+                    <a href="{{ member.linkedin }}" target="_blank" class="text-green-400 hover:text-green-300 transition-colors">
+                        <i class="fab fa-linkedin text-xl"></i>
+                    </a>
+                    {% endif %}
+                    {% if member.github %}
+                    <a href="{{ member.github }}" target="_blank" class="text-green-400 hover:text-green-300 transition-colors">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    {% endif %}
+                    {% if member.twitter %}
+                    <a href="{{ member.twitter }}" target="_blank" class="text-green-400 hover:text-green-300 transition-colors">
+                        <i class="fab fa-twitter text-xl"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full text-center py-20">
+                <div class="text-6xl mb-6 text-green-400">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4">Meet Our Team</h3>
+                <p class="text-gray-300 mb-8">We're building an amazing team of talented professionals.</p>
+                <a href="/contact/" class="bg-gradient-to-r from-green-500 to-green-600 px-8 py-4 rounded-lg font-semibold hover:from-green-600 hover:to-green-700 transition-all green-glow inline-block">
+                    Join Our Team
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Join Team CTA -->
+{% if team_members %}
+<section class="py-20 bg-gradient-to-r from-green-900/20 to-emerald-900/20">
+    <div class="container mx-auto px-6 text-center">
+        <h2 class="text-4xl md:text-5xl font-bold mb-6 text-glow">Join Our Growing Team</h2>
+        <p class="text-xl mb-8 text-gray-300 max-w-3xl mx-auto">
+            We're always looking for talented individuals who share our passion for creating exceptional software solutions.
+        </p>
+        <div class="space-x-4">
+            <a href="/contact/" class="bg-gradient-to-r from-green-500 to-green-600 px-8 py-4 rounded-lg font-semibold hover:from-green-600 hover:to-green-700 transition-all green-glow inline-block">
+                Apply Now
+            </a>
+            <a href="/about/" class="border border-green-500 px-8 py-4 rounded-lg font-semibold hover:bg-green-500/20 transition-all inline-block">
+                Learn About Us
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

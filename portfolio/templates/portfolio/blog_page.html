@@ -1,0 +1,81 @@
+{% extends "portfolio/base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="pt-32 pb-20">
+    <div class="container mx-auto px-6">
+        <div class="max-w-4xl mx-auto">
+            {% if page.featured_image_url %}
+            <div class="mb-8">
+                <img src="{{ page.featured_image_url }}" alt="{{ page.title }}" class="w-full h-64 object-cover rounded-lg">
+            </div>
+            {% endif %}
+            <div class="flex items-center space-x-4 text-sm text-gray-400 mb-6">
+                <span>{{ page.author }}</span>
+                <span>•</span>
+                <span>{{ page.publish_date|date:"F d, Y" }}</span>
+                <span>•</span>
+                <span>{{ page.read_time }}</span>
+            </div>
+            <h1 class="text-5xl md:text-6xl font-bold mb-6 text-glow">{{ page.title }}</h1>
+            <p class="text-xl text-gray-300 leading-relaxed">{{ page.excerpt }}</p>
+        </div>
+    </div>
+</section>
+
+<!-- Blog Content -->
+<section class="py-20">
+    <div class="container mx-auto px-6">
+        <div class="max-w-4xl mx-auto">
+            <div class="prose prose-lg prose-invert max-w-none">
+                {% for block in page.content %}
+                    {% if block.block_type == 'heading' %}
+                        <h2 class="text-3xl font-bold mb-6 text-green-400">{{ block.value }}</h2>
+                    {% elif block.block_type == 'paragraph' %}
+                        {{ block.value|richtext }}
+                    {% elif block.block_type == 'image' %}
+                        <div class="my-8">
+                            <img src="{{ block.value.url }}" alt="{{ block.value.title }}" class="w-full rounded-lg">
+                        </div>
+                    {% elif block.block_type == 'quote' %}
+                        <blockquote class="border-l-4 border-green-500 pl-6 my-8 text-xl italic text-gray-300">
+                            {{ block.value }}
+                        </blockquote>
+                    {% elif block.block_type == 'code' %}
+                        <pre class="bg-gray-900 border border-gray-700 rounded-lg p-6 my-8 overflow-x-auto"><code>{{ block.value }}</code></pre>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Tags -->
+{% if page.blog_tags.all %}
+<section class="py-12 bg-black/50">
+    <div class="container mx-auto px-6">
+        <div class="max-w-4xl mx-auto">
+            <h3 class="text-xl font-semibold mb-4">Tags:</h3>
+            <div class="flex flex-wrap gap-3">
+                {% for tag in page.blog_tags.all %}
+                <span class="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-sm">#{{ tag.tag_name }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA Section -->
+<section class="py-20">
+    <div class="container mx-auto px-6 text-center">
+        <h2 class="text-4xl font-bold mb-6 text-glow">Interested in Our Services?</h2>
+        <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            Ready to discuss your project? Let's connect and explore how we can help.
+        </p>
+        <button class="bg-gradient-to-r from-green-500 to-green-600 px-8 py-4 rounded-lg font-semibold hover:from-green-600 hover:to-green-700 transition-all green-glow" onclick="window.location.href='/#contact'">
+            Get In Touch
+        </button>
+    </div>
+</section>
+{% endblock %}
